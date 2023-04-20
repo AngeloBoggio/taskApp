@@ -4,12 +4,14 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('./models/user');
 
 
-const opts = {
+module.exports = function(passport) {
+
+  const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: '7432179417743294917508547391028393321469319800285376886682131708131379949611576377659258121094947976',
-};
+  };
 
-passport.use(
+  passport.use(
     new JwtStrategy(opts, async(jwt_payload, done) => {
         try{
             const user = await User.findById(jwt_payload.userId);
@@ -19,16 +21,14 @@ passport.use(
             }
 
             return done(null,user);
-        } catch (err) {
+          } catch (err) {
             return done(err,false);
-        }
-    })
-);
+          }
+      })
+  );
 
-
-module.exports = function(passport) {
-  passport.use(new LocalStrategy(
-    async function(username,password,done){
+  passport.use(
+    new LocalStrategy(async function(username,password,done){
       try {
         const user = await User.findOne({username:username});
         if(!user){
@@ -45,11 +45,11 @@ module.exports = function(passport) {
     }
   ));
   
-passport.serializeUser((user, done) => {
+  passport.serializeUser((user, done) => {
     done(null, user.id);
-});
+  });
   
-passport.deserializeUser(async (id, done) => {
+  passport.deserializeUser(async (id, done) => {
     try {
       const user = await User.findById(id);
       done(null, user);

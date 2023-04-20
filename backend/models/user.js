@@ -18,6 +18,14 @@ const userSchema = new Schema({
       required: true,
     },
     tasks: [taskSchema],
+    totalTasks:{
+      type:Number,
+      default: 0,
+    },
+    completedTasks:{
+      type:Number,
+      default: 0,
+    },
   });
   
   userSchema.methods.validPassword = async function (password) {
