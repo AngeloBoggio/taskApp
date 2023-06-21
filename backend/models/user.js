@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 const bcrypt = require('bcrypt');
 
 const taskSchema = new Schema({
+  taskId: Number, // New field
   title: String,
   description: String,
   completed: Boolean,
